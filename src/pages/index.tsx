@@ -13,23 +13,29 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
   ]);
-  const directions = [
-    [-1, 0],
-    [-1, -1],
-    [-1, 1],
-    [0, 1],
-    [0, -1],
-    [1, 0],
-    [1, -1],
-    [1, 1],
-  ];
+
   const onClick = (x: number, y: number) => {
     console.log(x, y);
     const newBoard: number[][] = JSON.parse(JSON.stringify(board));
-    if (newBoard[x][y] === 0) {
-      for (const newstone of directions) {
+
+    for (let i = -1; i <= 1; i++) {
+      for (let j = -1; j <= 1; j++) {
+        const x_new = x + i;
+        const y_new = y + j;
+        if (
+          board[y_new]?.[x_new] !== undefined &&
+          board[y_new][x_new] !== 0 &&
+          board[y_new][x_new] !== turnColor
+        ) {
+          while (
+            board[y_new]?.[x_new] !== undefined &&
+            board[y_new][x_new] !== 0 &&
+            board[y_new][x_new] !== turnColor
+          ) {}
+        }
       }
     }
+
     if (board[y + 1] !== undefined && board[y + 1][x] !== 0 && board[y + 1][x] !== turnColor) {
       newBoard[y][x] = turnColor;
       setTurnColor(2 / turnColor);
