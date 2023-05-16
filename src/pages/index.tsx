@@ -17,57 +17,43 @@ const Home = () => {
   const onClick = (x: number, y: number) => {
     console.log(x, y);
     const newBoard: number[][] = JSON.parse(JSON.stringify(board));
-
-    if (board[y][x] !== 0) {
-      return;
-    }
-    const mass = [
-      [-1, 1],
-      [-1, 0],
-      [-1, 1],
-      [0, -1],
-      [0, 1],
-      [1, -1],
-      [1, 0],
-      [1, 1],
-    ];
-    const Color = turnColor === 1 ? 2 : 1;
-
-    for (let i = 0; i < mass.length; i++) {
-      const newx = mass[i][0];
-      const newy = mass[i][1];
-      let last_x = x + newx;
-      let last_y = y + newy;
-      let count = 0;
-
-      while (
-        last_x >= 0 &&
-        last_x <= 7 &&
-        last_y >= 0 &&
-        last_y <= 7 &&
-        newBoard[last_y][last_x] === Color
-      ) {
-        last_x += newx;
-        last_y += newy;
-        count++;
-      }
-
-      if (
-        last_x >= 0 &&
-        last_x <= 7 &&
-        last_y >= 0 &&
-        last_y <= 7 &&
-        newBoard[last_y][last_x] === turnColor &&
-        count > 0
-      ) {
-        for (let j = 0; j <= count; j++) {
-          newBoard[y + j * newy][x + j * newx] = turnColor;
+    const inbox_1 = [];
+    const inbox_2 = [];
+    if (board[y][x] === 0) {
+      for (let a = -1; a < 2; a++) {
+        for (let b = -1; b < 2; b++) {
+          let new_y = y + a;
+          let new_x = x + b;
+          {
+            for (let c = 0; c <= 7; c++) {
+              if (
+                board[new_y] === undefined ||
+                board[new_y][new_x] === undefined ||
+                board[new_y][new_x] === 0 ||
+                board[new_y][new_x] === 3
+              ) {
+                inbox_1.length = 0;
+                break;
+              } else if (board[new_y][new_x] === turnColor) {
+                break;
+              } else {
+                inbox_1.push([new_y, new_x]);
+                new_y += a;
+                new_x += b;
+              }
+            }
+            if (inbox_1.length > 0) {
+              inbox_1.forEach(([new_y, new_x]) => {
+                newBoard[new_y][new_x] = turnColor;
+              });
+            }
+            if (inbox_1.length) {
+              //
+            }
+          }
         }
       }
     }
-
-    setBoard(newBoard);
-    setTurnColor(turnColor === 1 ? 2 : 1);
   };
   return (
     <div className={styles.container}>
