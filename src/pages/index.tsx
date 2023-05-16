@@ -18,7 +18,6 @@ const Home = () => {
     console.log(x, y);
     const newBoard: number[][] = JSON.parse(JSON.stringify(board));
     const inbox_1 = [];
-    const inbox_2 = [];
     if (board[y][x] === 0) {
       for (let a = -1; a < 2; a++) {
         for (let b = -1; b < 2; b++) {
@@ -43,13 +42,14 @@ const Home = () => {
               }
             }
             if (inbox_1.length > 0) {
-              inbox_1.forEach(([new_y, new_x]) => {
+              for (const [new_y, new_x] of inbox_1) {
                 newBoard[new_y][new_x] = turnColor;
-              });
+                setBoard(newBoard);
+              }
+
+              setTurnColor(2 / turnColor);
             }
-            if (inbox_1.length) {
-              //
-            }
+            newBoard[y][x] = turnColor;
           }
         }
       }
