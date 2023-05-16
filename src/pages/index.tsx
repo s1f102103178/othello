@@ -18,29 +18,56 @@ const Home = () => {
     console.log(x, y);
     const newBoard: number[][] = JSON.parse(JSON.stringify(board));
 
-    for (let i = -1; i <= 1; i++) {
-      for (let j = -1; j <= 1; j++) {
-        const x_new = x + i;
-        const y_new = y + j;
-        if (
-          board[y_new]?.[x_new] !== undefined &&
-          board[y_new][x_new] !== 0 &&
-          board[y_new][x_new] !== turnColor
-        ) {
-          while (
-            board[y_new]?.[x_new] !== undefined &&
-            board[y_new][x_new] !== 0 &&
-            board[y_new][x_new] !== turnColor
-          ) {}
+    if (board[y][x] !== 0) {
+      return;
+    }
+    const mass = [
+      [-1, 1],
+      [-1, 0],
+      [-1, 1],
+      [0, -1],
+      [0, 1],
+      [1, -1],
+      [1, 0],
+      [1, 1],
+    ];
+    const Color = turnColor === 1 ? 2 : 1;
+
+    for (let i = 0; i < mass.length; i++) {
+      const newx = mass[i][0];
+      const newy = mass[i][1];
+      let last_x = x + newx;
+      let last_y = y + newy;
+      let count = 0;
+
+      while (
+        last_x >= 0 &&
+        last_x <= 7 &&
+        last_y >= 0 &&
+        last_y <= 7 &&
+        newBoard[last_y][last_x] === Color
+      ) {
+        last_x += newx;
+        last_y += newy;
+        count++;
+      }
+
+      if (
+        last_x >= 0 &&
+        last_x <= 7 &&
+        last_y >= 0 &&
+        last_y <= 7 &&
+        newBoard[last_y][last_x] === turnColor &&
+        count > 0
+      ) {
+        for (let j = 0; j <= count; j++) {
+          newBoard[y + j * newy][x + j * newx] = turnColor;
         }
       }
     }
 
-    if (board[y + 1] !== undefined && board[y + 1][x] !== 0 && board[y + 1][x] !== turnColor) {
-      newBoard[y][x] = turnColor;
-      setTurnColor(2 / turnColor);
-    }
     setBoard(newBoard);
+    setTurnColor(turnColor === 1 ? 2 : 1);
   };
   return (
     <div className={styles.container}>
